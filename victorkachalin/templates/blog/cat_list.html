@@ -1,0 +1,31 @@
+{% extends "page_sidebar.html" %}
+
+
+
+{% block content %}
+  <div id="content">
+    <!-- <div id="content"> -->
+
+    {% for post in object_list %}
+      <div class="blog-post-wide">
+        <h1><a href="{{ post.get_absolute_url }}">{{ post.name }}</a></h1>
+        <div class="double-hr"></div>
+ <!--        <div class="post-info">
+          <ul>
+            <li><a href="#">{{ post.date }}</a></li>
+            <li><a href="#"> <span class="no-caps"> by</span> pexeto </a></li>
+            <li class="post-info-categories"><a href="#"> Career</a>, <a href="#">Productivity</a> , <a href="#">General</a> </li>
+            <li class="post-info-comments"><a href="#">23 Comments </a></li>
+          </ul>
+        </div> -->
+        <!-- <a href=""> <img src="images/post_img.jpg" alt="" class="shadow-frame" /> </a> -->
+        <p> {{ post.description }} </p>
+      </div>
+       {% empty %}
+    <p>Нет постов</p>
+    {% endfor %}
+    <!-- </div> -->
+  </div>
+    {% endblock %}
+   
+  </div>

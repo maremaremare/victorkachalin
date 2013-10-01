@@ -1,0 +1,31 @@
+{% extends 'base.html'  %}
+
+
+{% block page %}
+
+
+    <div id="slider-container">
+      <div id="slider-container-shadow"></div>
+      <div id="slider" class="center"> 
+
+{% for photo in object %}
+
+        <img src="{{ photo.get_homepage_url }}" alt="" />
+{% endfor %}
+
+
+         </div>
+      <div id="slider-container-shadow-bottom"></div>
+    </div>
+
+<div id="slider-navigation-container">
+      <div class="hr"></div>
+      <div class="center relative">
+        <div id="slider-navigation" >
+          <!-- the small thumbnails will be displayed here -->
+        </div>
+      </div>
+      <div class="hr"></div>
+    </div>
+
+ {% endblock %}   

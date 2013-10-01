@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block page %}
+<div id="page-title">
+  <div id="page-title-shadow"></div>
+  <div class="center">
+    <h6>.</h6>
+  </div>
+  <div id="page-title-shadow-bottom"></div>
+</div>
+<div id="content-container" class="center">
+
+  {% block content %}
+  {% endblock content %}
+
+  {% block sidebar %}
+
+  <div class="sidebar">
+    <div class="sidebar-box">
+      <h4>{{ cname }}</h4>
+      <div class="double-hr"></div>
+      <p>{{ cdescription }}</p>
+    </div>
+
+    {% if links %}
+      <div class="sidebar-box">
+        <h4>{{dododo}}</h4>
+        <div class="double-hr"></div>
+        <ul>
+          {% for item in links %}
+          <li><a href="{{item.get_absolute_url}}">{{ item.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+{% endif %}
+
+
+    {% if taglinks %}
+      <div class="sidebar-box">
+        <h4>{{dododo}}</h4>
+        <div class="double-hr"></div>
+        <ul>
+        <li><a href="/photoalbum/">все фотографии</a></li>
+          {% for item in taglinks %}
+          <li><a href="/photoalbum/tag/{{item.name}}">{{ item.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+{% endif %}
+
+
+
+{% if hastags %}
+{% load tagging_tags %}
+
+
+<div class="sidebar-box">
+        <h4>Метки</h4>
+{% tag_cloud_for_model blog.BlogPost as tags with steps=6 min_count=1 distribution=log %}
+
+{% for tag in tags %}
+<span class="tag-{{tag.font_size|add:"2"}}">
+<a href="/blog/tag/{{tag.name}}" >{{tag.name}}</a>
+</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+      <div class="sidebar-box">
+        <h4>Случайный рисунок</h4>
+        <div class="double-hr"></div>
+
+        {% for gallery in galleries|slice:":1" %}
+
+        <a rel="{{ gallery.get_absolute_url }}" class="single_image" href="{{ gallery.get_absolute_url }}" title="">
+          <img src="{{ gallery.sample.1.get_thumbnail_url }}" class="shadow-frame"></a>
+    
+          {% endfor %}
+        </div>
+      </div>
+
+
+      {% endblock sidebar %}
+    </div>
+    {% endblock page %}

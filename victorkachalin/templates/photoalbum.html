@@ -1,0 +1,57 @@
+{% extends "page_sidebar.html" %}
+
+
+
+  {% block content %}
+  <div id="content">
+<h1>Фотоальбом</h1>
+
+<div id="controls"></div>
+<div id="loading"></div>
+<div id="slideshow" class="slideshow"></div>
+
+
+
+<div class="navigation-container">
+
+<div id="thumbs"  class="navigation">
+<a class="pageLink prev" style="visibility: hidden; opacity: 0.67;" href="#" title="Previous Page"><img src="/static/images/nivo_arrow_l.png"></a>
+    <ul class="thumbs noscript">
+
+     {% for photo in object %}
+    
+        <li>
+            <a class="thumb" name="optionalCustomIdentifier" href="{{ photo.get_photoalbum_url }}" title="your image title">
+                <img class="shadow-frame" src="{{ photo.get_photoalbum_thumbs_url }}" alt="your image title again for graceful degradation" />
+            </a>
+ 
+        </li>
+        {% endfor %}
+        
+    </ul>
+  <a class="pageLink next" style="visibility: visible; opacity: 0.67;" href="#" title="Next Page"><img src="/static/images/nivo_arrow_r.png"></a>
+</div>
+</div>
+
+
+				<!-- <div class="content">
+					<div class="slideshow-container">
+						<div id="controls" class="controls"></div>
+						<div id="loading" class="loader"></div>
+						<div id="slideshow" class="slideshow"></div>
+					</div>
+					<div id="caption" class="caption-container">
+						<div class="photo-index"></div>
+					</div>
+				</div> -->
+
+     <!-- {% for photo in object.photos.all %}
+     <div style="display: block;" class="portfolio-item"><a class="single_image" href="{{ photo.get_absolute_url }}" title="Description goes here"><img src="{{ photo.get_thumbnail_url }}" class="shadow-frame"></a></div>
+
+     {% endfor %} -->
+</div>
+
+
+
+{% endblock %}
+

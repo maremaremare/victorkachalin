@@ -1,0 +1,85 @@
+{% extends "page_sidebar.html" %}
+
+{% block content %}
+  <!-- <div id="full-width"> -->
+    <div id="content">
+
+
+
+    {% for post in object_list %}
+      <div class="blog-post-wide">
+        <h1><a href="{{ post.get_absolute_url }}">{{ post.name }}</a></h1>
+        <div class="double-hr"></div>
+        <div class="post-info">
+          <ul>
+            <li><a href="#">{{ post.date }}</a></li>    
+            
+
+            <li class="post-info-categories">
+
+
+
+
+{% load tagging_tags %}
+
+
+{% tags_for_object post as tags %}
+
+<div id="cloud">
+
+    {% for tag in tags %}
+
+       <a href="/blog/tag/{{ tag }}">{{ tag }}</a>&nbsp;
+
+    {% endfor %}
+
+</div>
+             
+            <li class="post-info-comments"><a data-disqus-identifier="blogpost_{{post.id}}" href="http://victorkachalin.ru{{post.get_absolute_url}}#disqus_thread">Комментарии</a></li>
+          </ul>
+        </div>
+        <!-- <a href=""> <img src="images/post_img.jpg" alt="" class="shadow-frame" /> </a> -->
+        <p> {{ post.text|safe|truncatewords:50 }}<br> <a href="{{post.get_absolute_url}}" class="read-more">Прочесть полностью...</a> </p>
+      </div>
+       {% empty %}
+    <p>Нет постов</p>
+
+
+    {% endfor %}
+
+   {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="/blog/page{{ page_obj.previous_page_number }}">Назад</a>
+                {% endif %}
+                <span class="page-current">
+                    (Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}).
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="/blog/page{{ page_obj.next_page_number }}">Вперед</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+
+    <!-- </div> -->
+  <!-- </div> -->
+    </div>
+
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'victorkachalin'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+
+    {% endblock content %}
+   
+

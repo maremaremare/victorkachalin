@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Витин сайт - Base2</title>
+<!-- THE STYLES -->
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/superfish.css"%}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/style.css"%}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/fonts.css"%}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/prettyPhoto.css"%}"/>
+<!--[if lte IE 6]>
+<link href="styles/style_ie6.css" rel="stylesheet" type="text/css" />  
+<script type="text/javascript" src="script/supersleight.js"></script>
+<![endif]-->
+<!--[if lte IE 7]>
+<link href="styles/style_ie7.css" rel="stylesheet" type="text/css" />  
+<![endif]-->
+<!--[if lte IE 8]>
+<link href="styles/style_ie8.css" rel="stylesheet" type="text/css" />  
+<![endif]-->
+<!--END THE STYLES -->
+<!-- SCRIPTS -->
+<script type="text/javascript" src="{% static "script/jquery-1.4.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.tools.min.js" %}"></script>
+<script type="text/javascript" src="{% static "script/superfish.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.prettyPhoto.js" %}"></script>
+<script type="text/javascript" src="{% static "script/slider.js" %}"></script>
+<script type="text/javascript" src="{% static "script/script.js" %}"></script>
+<script type="text/javascript">
+$(function(){
+	pexetoSite.initSite();
+});
+
+</script>
+<!-- END SCRIPTS -->
+</head>
+<body>
+
+<div id="main-container">
+  <div id="line-top"></div>
+  <div id="header" >
+    <div id="logo-container" class="center"><a href="index.html" ></a></div>
+    <div id="menu-container">
+      <div class="hr"></div>
+      <div id="menu" class="center">
+
+
+      {% load mptt_tags %}
+<ul class="sf-menu">
+    {% recursetree nodes %}
+        <li>
+            <a href="{{node.get_absolute_url}}">{{ node.name }}</a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+
+      </div>
+      <div class="hr"></div>
+    </div>
+  </div>
+
+{% block page %}
+<!--   {% block content %}
+  {% endblock %}
+  
+  {% block sidebar %}
+  {% endblock %} -->
+{% endblock %}
+
+  <!-- FOOTER START -->
+  <div id="footer-container">
+    <div class="hr"></div>
+    <div id="footer-line"></div>
+    <div id="footer" class="center">
+      <div class="columns-wrapper">
+        <div class="four-columns">
+          <h4>More Projects</h4>
+          <div class="double-hr"></div>
+          <ul>
+            <li><a href="#">Create a Realistic Picture Frame With Photoshop</a></li>
+            <li><a href="#">Psdtuts joins the Smashing Network </a></li>
+            <li><a href="#">A Sneak Peek at Premium for Non-Members </a></li>
+            <li><a href="#">Create Gold Ornamental Text in Photoshop </a></li>
+          </ul>
+        </div>
+        <div class="four-columns">
+          <h4>laest from TWTTER</h4>
+          <div class="double-hr"></div>
+          <ul>
+            <li><a href="#">A new update of my Perception WordPress theme is now available- it includes a widgetized footer- http://bit.ly/cjHBqG</a></li>
+            <li><a href="#">Just finished the new addition to my Perception WordPress theme - a widgetized footer, the update is in query </a></li>
+          </ul>
+        </div>
+        <div class="four-columns">
+          <h4>Sociable Links</h4>
+          <div class="double-hr"></div>
+          <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has more or less normal distribution of letters </p>
+          <div id="footer-icons">
+            <ul>
+              <li><a href="#"><img src="images/icons/delicious_32.png" alt="icon1" /></a></li>
+              <li><a href="#"><img src="images/icons/facebook_32.png" alt="ico2n" /></a></li>
+              <li><a href="#"><img src="images/icons/flickr_32.png" alt="icon3" /></a></li>
+              <li><a href="#"><img src="images/icons/twitter_32.png" alt="icon4" /></a></li>
+              <li><a href="#"><img src="images/icons/rss_32.png" alt="icon5" /></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="four-columns-4">
+          <h4>Latest Projects</h4>
+          <div class="double-hr"></div>
+          <div id="footer-projcets">
+            <ul>
+              <li><a href="#"><img src="images/timthumb.jpg" alt="tumbnail2" /></a></li>
+              <li><a href="#"><img src="images/timthumb2.jpg" alt="tumbnail3" /></a></li>
+              <li><a href="#"><img src="images/timthumb3.jpg" alt="tumbnail4" /></a></li>
+              <li><a href="#"><img src="images/timthumb4.jpg" alt="tumbnail5" /></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="copyrights" >
+    <h5 class="center" >© Copyright Anthology Premium Website Template - Designed by <a href="http://themeforest.net/user/pexeto">Pexeto</a></h5>
+  </div>
+  <!-- FOOTER ENDS -->
+</div>
+</body>
+</html>

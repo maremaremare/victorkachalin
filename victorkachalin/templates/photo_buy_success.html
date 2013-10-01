@@ -1,0 +1,46 @@
+{% extends "photologue/root.html" %}
+
+{% load photologue_tags %}
+
+
+{% block content %}
+
+    <div id="portfolio-preview-container"><div id="portfolio-preview"><div>			
+<p> Имя: {{order.name}}</p>
+<p> Телефон: {{ order.phone }}</p>
+<p> Email: {{ order.email }}</p>
+{% if order.address %}
+<p> Доставка: почтой России</p>
+<p> Адрес: {{order.address}}</p>
+{% endif %}
+
+<form method="post" action="http://w.qiwi.ru/setInetBill_utf.do?from=240077&to={{ order.phone }}&summ={{ item.price }}&com=рисунок {{ item.title }}&lifetime=48&check_agt=false&txn_id={{order.id}}">
+<input type="submit">
+     <!-- <a href="" class="button" id="send_button"><span>Оплатить через qiwi-кошелек</span></a>     -->
+</form>
+
+			</div>
+
+
+
+
+			</div>
+
+
+
+
+<div class="sidebar">
+<div class="sidebar-box">
+
+    <div class="pricing-box three-columns">
+          <h4><span>{{item.name}} "{{photo.title}}"</span></h4>
+          <img src="{{ photo.get_shop_url }}" alt="" class="shadow-frame">
+          <span class="price"> {{item.price}} рублей</span> <br>
+         </div>
+</div>
+ 
+</div>
+ </div>
+
+
+  {% endblock %}

@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Виктор Качалин. Поэт, философ, художник.</title>
+<!-- THE STYLES -->
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/superfish.css"%}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/style.css"%}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/fonts.css"%}"/>
+
+<!--[if lte IE 6]>
+<link href="styles/style_ie6.css" rel="stylesheet" type="text/css" />  
+<script type="text/javascript" src="script/supersleight.js"></script>
+<![endif]-->
+<!--[if lte IE 7]>
+<link href="styles/style_ie7.css" rel="stylesheet" type="text/css" />  
+<![endif]-->
+<!--[if lte IE 8]>
+<link href="styles/style_ie8.css" rel="stylesheet" type="text/css" />  
+<![endif]-->
+<!--END THE STYLES -->
+<!-- SCRIPTS -->
+<script type="text/javascript" src="{% static "script/jquery-1.4.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.tools.min.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.tools.min.js" %}"></script>
+<script type="text/javascript" src="{% static "script/superfish.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.galleriffic.js" %}"></script>
+<script type="text/javascript" src="{% static "script/slider.js" %}"></script>
+<script type="text/javascript" src="{% static "script/script.js" %}"></script>
+<script type="text/javascript" src="{% static "script/jquery.opacityrollover.js" %}"></script>
+
+<script type="text/javascript">
+$(function(){
+  pexetoSite.initSite();
+  $('#slider').slider({thumbContainerId:'slider-navigation'});
+  $('ul.sf-menu').superfish();
+});
+
+</script>
+<!-- END SCRIPTS -->
+</head>
+<body>
+
+<div id="main-container">
+  <div id="line-top"></div>
+  <div id="header" >
+    <div id="logo-container" class="center"><a href="index.html" ></a></div>
+    <div id="menu-container">
+      <div class="hr"></div>
+      <div id="menu" class="center">
+
+
+      {% load mptt_tags %}
+<ul class="sf-menu">
+    {% recursetree nodes %}
+        <li>
+            <a href="{{node.get_absolute_url}}">{{ node.name }}</a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+
+      </div>
+      <div class="hr"></div>
+    </div>
+  </div>
+
+{% block page %}
+<!--   {% block content %}
+  {% endblock %}
+  
+  {% block sidebar %}
+  {% endblock %} -->
+{% endblock %}
+
+  <!-- FOOTER START -->
+  <div id="footer-container">
+    <div class="hr"></div>
+    <div id="footer-line"></div>
+    <div id="footer" class="center">
+      <div class="columns-wrapper">
+        <div class="four-columns">
+          <h4>Свежие стихи</h4>
+          <div class="double-hr"></div>
+          <ul>
+            {% for post in poetry %}
+            {% if forloop.counter < 6 %}
+            <li><a href="{{post.get_absolute_url}}">{{post.name}}</a></li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="four-columns">
+          <h4>Блог</h4>
+          <div class="double-hr"></div>
+          <ul>
+            {% for post in blogposts %}
+            {% if forloop.counter < 4 %}
+            <li><a href="{{post.get_absolute_url}}">{{post.text|truncatewords:9}}</a></li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="four-columns">
+          <h4>Социальные сети</h4>
+          <div class="double-hr"></div>
+          
+          <div id="footer-icons">
+            <ul>
+
+              <li><a href="#"><img src="{% static "images/icons/facebook_2.png"%}" alt="ico2n" /></a></li>
+               <li><a href="#"><img src="{% static "images/icons/vk.png"%}" alt="ico2n" /></a></li>
+                <li><a href="#"><img src="{% static "images/icons/yandex.png"%}" alt="ico2n" /></a></li>
+                 <li><a href="http://my.mail.ru/mail/alchantov/"><img src="{% static "images/icons/mail_ru_2.png"%}" alt="ico2n" /></a></li>
+                 <li><a href="http://duhov-vek.livejournal.com"><img src="{% static "images/icons/livejournal.png"%}" alt="ico2n" /></a></li>
+              
+            
+            </ul>
+          </div>
+        </div>
+        <div class="four-columns-4">
+          <h4>Последние рисунки</h4>
+          <div class="double-hr"></div>
+          <div id="footer-projcets">
+            <ul>
+              {% for pic in pictures %}
+              {% if forloop.counter < 5 %}
+              <li><a href="{{pic.get_absolute_url}}"><img src="{{pic.get_footer_url}}" alt="{{pic.title}}" /></a></li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="copyrights" >
+    <h5 class="center" >© Copyright Anthology Premium Website Template - Designed by <a href="http://themeforest.net/user/pexeto">Pexeto</a></h5>
+  </div>
+  <!-- FOOTER ENDS -->
+</div>
+
+
+
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				// We only want these styles applied when javascript is enabled
+
+				$('div.content').css('display', 'block');
+
+				// Initially set opacity on thumbs and add
+				// additional styling for hover effect on thumbs
+				var onMouseOutOpacity = 0.67;
+				$('#thumbs ul.thumbs li, div.navigation a.pageLink').opacityrollover({
+					mouseOutOpacity:   onMouseOutOpacity,
+					mouseOverOpacity:  1.0,
+					fadeSpeed:         'fast',
+					exemptionSelector: '.selected'
+				});
+				
+				// Initialize Advanced Galleriffic Gallery
+				var gallery = $('#thumbs').galleriffic({
+					delay:                     2500,
+					numThumbs:                 5,
+					preloadAhead:              5,
+					enableTopPager:            false,
+					enableBottomPager:         false,
+					imageContainerSel:         '#slideshow',
+					controlsContainerSel:      '#controls',
+					captionContainerSel:       '#caption',
+					loadingContainerSel:       '#loading',
+					renderSSControls:          true,
+					renderNavControls:         true,
+					playLinkText:              'Play Slideshow',
+					pauseLinkText:             'Pause Slideshow',
+					prevLinkText:              '&lsaquo; Previous Photo',
+					nextLinkText:              'Next Photo &rsaquo;',
+					nextPageLinkText:          'Next &rsaquo;',
+					prevPageLinkText:          '&lsaquo; Prev',
+					enableHistory:             false,
+					autoStart:                 false,
+					syncTransitions:           true,
+					defaultTransitionDuration: 900,
+					onSlideChange:             function(prevIndex, nextIndex) {
+						// 'this' refers to the gallery, which is an extension of $('#thumbs')
+						this.find('ul.thumbs').children()
+							.eq(prevIndex).fadeTo('fast', onMouseOutOpacity).end()
+							.eq(nextIndex).fadeTo('fast', 1.0);
+
+						// Update the photo index display
+						this.$captionContainer.find('div.photo-index')
+							.html('Photo '+ (nextIndex+1) +' of '+ this.data.length);
+					},
+					onPageTransitionOut:       function(callback) {
+						this.fadeTo('fast', 0.0, callback);
+					},
+					onPageTransitionIn:        function() {
+						var prevPageLink = this.find('a.prev').css('visibility', 'hidden');
+						var nextPageLink = this.find('a.next').css('visibility', 'hidden');
+						
+						// Show appropriate next / prev page links
+						if (this.displayedPage > 0)
+							prevPageLink.css('visibility', 'visible');
+
+						var lastPage = this.getNumPages() - 1;
+						if (this.displayedPage < lastPage)
+							nextPageLink.css('visibility', 'visible');
+
+						this.fadeTo('fast', 1.0);
+					}
+				});
+
+				/**************** Event handlers for custom next / prev page links **********************/
+
+				gallery.find('a.prev').click(function(e) {
+					gallery.previousPage();
+					e.preventDefault();
+				});
+
+				gallery.find('a.next').click(function(e) {
+					gallery.nextPage();
+					e.preventDefault();
+				});
+			});
+
+		</script>
+</body>
+</html>

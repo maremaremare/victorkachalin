@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+
+  <head>
+    <title>Pencil</title>
+    <meta charset=utf-8 />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="pencil.js"></script>
+    <link rel="stylesheet" type="text/css" href="pencil.css" />
+    <script>
+    $(function(){
+        $('#editor1').pencil();
+        $('#editor2').pencil({toolbarButtons:['bold', 'italic', 'strike']});
+
+        $('#editor3').pencil({language:'ru'});
+
+        Pencil.prototype.addPlugin('mybutton', function(){
+            var html = "<b>HELLO WORLD</b>";
+            this.insertHtml(html);
+            return false;
+        });
+        Pencil.prototype.translations['en']['toolbar.mybutton'] = 'My Button';
+        Pencil.prototype.translations['ru']['toolbar.mybutton'] = 'Моя кнопка';
+        $('#editor4').pencil();
+    });
+    </script>
+    <style>
+        .pencil_toolbar_button__mybutton{background-image: url(mybutton.png);}
+    </style>
+  </head>
+
+
+  <body>
+    <h1>Pencil WYSIWYG</h1>
+
+    <h2>Default settings</h2>
+
+    <textarea id="editor1" style="width: 700px; min-height: 400px;">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur <a href="http://example.com/">adipiscingx elit</a>. Nam rhoncus enim porta ipsum faucibus mattis.
+            Maecenas vulputate, enim in vestibulum sodales, ante augue suscipit nisi, ac interdum metus ligula vitae orci.
+            Ut neque ipsum, auctor vitae ultricies sit amet, vehicula et ante. Vivamus vitae velit augue. Etiam nunc neque,
+            varius nec placerat ac, vulputate vel neque. Vivamus fringilla dictum libero, a rutrum mi interdum id.
+            Morbi congue, sem eget luctus mattis, lacus nisi blandit dui, eu ultricies eros lacus nec tellus.
+        </p>
+        <img src="example.png" alt="An example" />
+        <p>
+            Curabitur egestas egestas nisi, sit amet scelerisque enim venenatis auctor. Donec egestas nunc a dolor ornare mollis.
+            Vivamus vulputate quam a risus sodales egestas. Praesent lectus ante, porttitor at aliquam et, facilisis
+            non justo. Praesent molestie, turpis ut convallis tempus, turpis arcu blandit nunc, ut rutrum massa tellus
+            non erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam adipiscing
+            leo massa, et tempor lorem. Morbi ultricies placerat pharetra.
+        </p>
+    </textarea>
+
+<br />
+<br />
+
+    <h2>Custom toolbar buttons set</h2>
+    If you don't need all available buttons, you can hide them.
+    <br /><br />
+
+    <textarea id="editor2" style="width: 600px; min-height: 200px;">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur <a href="http://example.com/">adipiscingx elit</a>. Nam rhoncus enim porta ipsum faucibus mattis.
+            Maecenas vulputate, enim in vestibulum sodales, ante augue suscipit nisi, ac interdum metus ligula vitae orci.
+            Ut neque ipsum, auctor vitae ultricies sit amet, vehicula et ante. Vivamus vitae velit augue. Etiam nunc neque,
+            varius nec placerat ac, vulputate vel neque. Vivamus fringilla dictum libero, a rutrum mi interdum id.
+            Morbi congue, sem eget luctus mattis, lacus nisi blandit dui, eu ultricies eros lacus nec tellus.
+        </p>
+    </textarea>
+
+<br />
+<br />
+    <h2>Internationalization</h2>
+    Here is example of russian localization. Notice, not only texts are changed, but some icons are changed too.
+    <br /><br />
+
+    <textarea id="editor3" style="width: 600px; min-height: 200px;">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur <a href="http://example.com/">adipiscingx elit</a>. Nam rhoncus enim porta ipsum faucibus mattis.
+            Maecenas vulputate, enim in vestibulum sodales, ante augue suscipit nisi, ac interdum metus ligula vitae orci.
+            Ut neque ipsum, auctor vitae ultricies sit amet, vehicula et ante. Vivamus vitae velit augue. Etiam nunc neque,
+            varius nec placerat ac, vulputate vel neque. Vivamus fringilla dictum libero, a rutrum mi interdum id.
+            Morbi congue, sem eget luctus mattis, lacus nisi blandit dui, eu ultricies eros lacus nec tellus.
+        </p>
+    </textarea>
+
+<br />
+<br />
+    <h2>Custom button example</h2>
+    'My Button' is added to the toolbar.
+    <br /><br />
+
+    <textarea id="editor4" style="width: 600px; min-height: 200px;">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur <a href="http://example.com/">adipiscingx elit</a>. Nam rhoncus enim porta ipsum faucibus mattis.
+            Maecenas vulputate, enim in vestibulum sodales, ante augue suscipit nisi, ac interdum metus ligula vitae orci.
+            Ut neque ipsum, auctor vitae ultricies sit amet, vehicula et ante. Vivamus vitae velit augue. Etiam nunc neque,
+            varius nec placerat ac, vulputate vel neque. Vivamus fringilla dictum libero, a rutrum mi interdum id.
+            Morbi congue, sem eget luctus mattis, lacus nisi blandit dui, eu ultricies eros lacus nec tellus.
+        </p>
+    </textarea>
+
+</body>
+</html>
+
+
+

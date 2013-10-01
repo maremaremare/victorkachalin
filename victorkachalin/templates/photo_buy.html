@@ -1,0 +1,110 @@
+{% extends "photologue/root.html" %}
+
+{% load photologue_tags %}
+
+
+{% block content %}
+
+    <div id="portfolio-preview-container"><div id="portfolio-preview"><div>			
+
+<form action="" method="post" id="submit_form">{% csrf_token %}
+<!-- {{ form.non_field_errors }}
+
+
+
+{{ form.errors }} -->
+    <div class="contact_form_input">
+       
+        <label for="id_subject"><h6>Ваше имя:</h6></label>
+        {{ form.name }}
+    {% if form.name.errors %}
+          <div class="question_icon"></div>
+          {% endif %}
+    </div>
+    <div class="contact_form_input">
+       
+        <label for="id_message"><h6>Телефон:</h6></label>
+        {{ form.phone }}   {% if form.phone.errors %}
+          <div class="question_icon"></div>
+          {% endif %}
+    </div>
+    <div class="contact_form_input">
+        
+        <label for="id_sender"><h6>E-mail:</h6></label>
+        {{ form.email }}   {% if form.email.errors %}
+          <div class="question_icon"></div>
+          {% endif %}
+    </div>
+    <div class="contact_form_input">
+        <h6>
+  
+        {{ form.delivery }}</h6>
+    </div>
+
+       <div class="contact_form_input" id = "address_div">
+        <label for="id_sender"><h6>Полный почтовый адрес:</h6></label>
+        
+  
+        {{ form.address }}   {% if form.address.errors %}
+          <div class="question_icon"></div>
+          {% endif %}
+    </div>
+
+    <input type="hidden" name="merchandise_id" value="{{id}}" id="id_merchandise_id" />
+
+    
+
+    {% if form.errors %}
+          <div class="error_box"><b> {{form.errors.as_text}}</div>
+          {% endif %}
+<br>
+     <a href="" class="button" id="send_button"><span>Заказать</span></a>
+    
+</form>
+
+			</div>
+
+
+
+
+			</div>
+
+
+
+
+<div class="sidebar">
+<div class="sidebar-box">
+
+    <div class="pricing-box three-columns">
+          <h4><span>{{item.name}} "{{photo.title}}"</span></h4>
+          <img src="{{ photo.get_shop_url }}" alt="" class="shadow-frame">
+          <span class="price"> {{item.price}} рублей</span> <br>
+         </div>
+</div>
+ 
+				
+
+
+<!-- <div class="sidebar-box">
+			<h4>Другие работы</h4><hr><hr>
+
+			<div style="width: 1770px;" id="portfolio-wrapper">
+				
+				<div class="portfolio-items">
+
+					{% for ph in all_photos %}
+
+			
+                    {% if forloop.counter < 5 %}
+                   <a href="{{ ph.get_absolute_url }}"><img style="margin-bottom: 10px; opacity: 1; cursor: pointer;" src="{{ ph.get_square_url }}" alt="" class="alignleft shadow-frame"></a>
+                    {% endif %}
+
+                     {% endfor %}
+                    </div>
+		</div>
+
+		<div id="portfolio-big-pagination"><a class="alignleft" id="prev-item"> <span class="portfolio-big-arrows">« </span>Назад</a> <a class="alignright" id="next-item"> Дальше <span class="portfolio-big-arrows"> »</span></a></div></div> --></div>
+ </div>
+
+
+  {% endblock %}

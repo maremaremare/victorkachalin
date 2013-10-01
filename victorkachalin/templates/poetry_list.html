@@ -1,0 +1,50 @@
+{% extends "page_sidebar.html" %}
+
+
+
+{% block content %}
+  <div id="content">
+    <!-- <div id="content"> -->
+
+    {% for post in object_list %}
+      <div class="blog-post-wide">
+        <h4><a href="{{ post.get_absolute_url }}">{{ post.name }}</a></h4>
+        <!-- <div class="hr"></div> -->
+        <hr>
+ <!--        <div class="post-info">
+          <ul>
+            <li><a href="#">{{ post.date }}</a></li>
+            <li><a href="#"> <span class="no-caps"> by</span> pexeto </a></li>
+            <li class="post-info-categories"><a href="#"> Career</a>, <a href="#">Productivity</a> , <a href="#">General</a> </li>
+            <li class="post-info-comments"><a href="#">23 Comments </a></li>
+          </ul>
+        </div> -->
+        <!-- <a href=""> <img src="images/post_img.jpg" alt="" class="shadow-frame" /> </a> -->
+   
+      </div>
+       {% empty %}
+    <p>Нет постов</p>
+    {% endfor %}
+
+
+       {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="/{{cname}}/poetry/page{{ page_obj.previous_page_number }}">Назад</a>
+                {% endif %}
+                <span class="page-current">
+                    (Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}).
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="/{{cname}}/poetry/page{{ page_obj.next_page_number }}">Вперед</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+
+    <!-- </div> -->
+  </div>
+    {% endblock %}
+   
+  </div>

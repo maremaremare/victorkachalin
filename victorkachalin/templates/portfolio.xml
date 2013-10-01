@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portfolio>
+
+	<categories>
+		
+		<category id="photo">Photography</category>
+	
+	</categories>
+
+	<items>
+	 {% for photo in object.public %}
+		<item>
+			<thumbnail>{{ photo.get_thumbnail_url }}</thumbnail>
+			<preview>{{ photo.get_absolute_url }}</preview>
+			<category>photo</category>
+			<description>{{ object.title }}</description>
+		</item>
+	{% endfor %}	
+	</items>
+</portfolio>

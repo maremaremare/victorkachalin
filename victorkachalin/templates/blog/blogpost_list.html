@@ -1,0 +1,62 @@
+{% extends "page_sidebar.html" %}
+
+{% block content %}
+  <!-- <div id="full-width"> -->
+    <div id="content">
+
+{% load paging_extras %}
+
+{% paginate object_list from request as results %}
+{{ results.paging }}
+
+
+
+
+
+    {% for post in results.objects %}
+      <div class="blog-post-wide">
+        <h1><a href="{{ post.get_absolute_url }}">{{ post.name }}</a></h1>
+        <div class="double-hr"></div>
+        <div class="post-info">
+          <ul>
+            <li><a href="#">{{ post.date }}</a></li>    
+            
+
+            <li class="post-info-categories">
+
+
+
+
+{% load tagging_tags %}
+
+
+{% tags_for_object post as tags %}
+
+<div id="cloud">
+
+    {% for tag in tags %}
+
+       <a href="/blog/tag/{{ tag }}">{{ tag }}</a>&nbsp;
+
+    {% endfor %}
+
+</div>
+             
+            <li class="post-info-comments"><a href="#">23 Comments </a></li>
+          </ul>
+        </div>
+        <!-- <a href=""> <img src="images/post_img.jpg" alt="" class="shadow-frame" /> </a> -->
+        <p> {{ post.text|safe|truncatewords:50 }}<br> <a href="" class="read-more">Прочесть полностью...</a> </p>
+      </div>
+       {% empty %}
+    <p>Нет постов</p>
+
+
+    {% endfor %}
+{{ results.paging }}
+    <!-- </div> -->
+  <!-- </div> -->
+    </div>
+    {% endblock content %}
+   
+
