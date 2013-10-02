@@ -24,7 +24,7 @@ path.append(DJANGO_ROOT)
 
 ########## DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = False
+DEBUG = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
 TEMPLATE_DEBUG = DEBUG
@@ -55,7 +55,8 @@ DATABASES = {
     }
 }
 ########## END DATABASE CONFIGURATION
-
+LOGGING_LOG_SQL=True
+LOGGING_OUTPUT_ENABLED=True
 
 ########## GENERAL CONFIGURATION
 
@@ -98,7 +99,7 @@ USE_TZ = True
 
 ########## MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
+MEDIA_ROOT = '/home/maremare/domains/victorkachalin.ru/media/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
@@ -107,14 +108,14 @@ MEDIA_URL = '/media/'
 
 ########## STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
+STATIC_ROOT = '/home/maremare/domains/victorkachalin.ru/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-    normpath(join(SITE_ROOT, 'static')),
+    '/home/maremare/domains/victorkachalin.ru/static/'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
@@ -194,7 +195,6 @@ DJANGO_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -207,19 +207,20 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    #'treeadmin',
-    #'grappelli',
-    #'tagging',
-    #'photologue',
-    #'mptt',
+    'treeadmin',
+    'grappelli',
+    'tagging',
+    'photologue',
+    'mptt',
+    'gunicorn',
     # Database migration helpers:
     'south',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    #shop,
-    #blog,
+    'shop',
+    'blog',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

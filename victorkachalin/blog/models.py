@@ -37,7 +37,7 @@ class BlogPost(models.Model):
         ordering = ['-date']     
 
 
-class Cat(MPTTModel):
+class Category(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     name = models.CharField(max_length=50,unique=True)
     slug = models.CharField(max_length=50,unique=True)
@@ -65,7 +65,7 @@ class NewPost(models.Model):
     def create_choices(): #TODO убрать лишнее
         list=[]
         
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if not item.get_children() and item.is_addable:
                 category = item.slug.split('/')[0]
                 if item.get_root().name != item.name:

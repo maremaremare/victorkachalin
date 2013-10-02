@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from treeadmin.admin import TreeAdmin
-from blog.models import NewPost, BlogPost, Cat, SinglePage # наша модель из blog/models.py
+from blog.models import NewPost, BlogPost, Category, SinglePage # наша модель из blog/models.py
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -25,6 +25,6 @@ admin.site.unregister(User)
 admin.site.unregister(Group)           
 admin.site.register(BlogPost)
 admin.site.register(SinglePage)        
-admin.site.register(Cat, TreeModelAdmin)
+admin.site.register(Category, TreeModelAdmin)
 admin.site.register(NewPost, UserAdmin) 
 

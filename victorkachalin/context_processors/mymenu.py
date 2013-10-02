@@ -1,6 +1,6 @@
 # coding: utf-8
-from blog.models import Cat
+from blog.models import Category
 
 def menu(request):
-    return {"category" : Cat,
-    		'nodes': Cat.objects.all()}
+    return {"category" : Category,
+    		'nodes': Category.objects.all()}

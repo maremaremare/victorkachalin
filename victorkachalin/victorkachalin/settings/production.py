@@ -43,9 +43,9 @@ SERVER_EMAIL = EMAIL_HOST_USER
 ########## DATABASE CONFIGURATION
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'victorkachalin',
-        'USER': 'django_user',
+        'USER': 'django_login',
         'PASSWORD': DB_PASS,
         'HOST': '',
         'PORT': '',
@@ -56,7 +56,7 @@ DATABASES = {
 
 ########## CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
-CACHES = {}
+#CACHES = {}
 ########## END CACHE CONFIGURATION
 
 

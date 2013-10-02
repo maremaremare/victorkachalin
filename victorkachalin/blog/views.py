@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, FormView
-from blog.models import NewPost, Cat, BlogPost, SinglePage
+from blog.models import NewPost, Category, BlogPost, SinglePage
 
 from photologue.models import Gallery, Photo
 from photologue.views import GalleryView
@@ -18,7 +18,7 @@ class PhotoAlbumView(TemplateView):
         # Add in a QuerySet of all the books
         #context['sidebar_title'] = define_root_Cat(request)
         c = None
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if 'about' == item.slug:
                 c = item
         gallery = Gallery.objects.get(title_slug='photoalbum')
@@ -43,7 +43,7 @@ class PhotoAlbumTagView(PhotoAlbumView):
         if tag:
             this_tag = Tag.objects.get(name=tag)
         c = None
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if 'about' == item.slug:
                 c = item
         if tag:
@@ -97,7 +97,7 @@ class BlogPostListView(ListView):
         # Add in a QuerySet of all the books
         #context['sidebar_title'] = define_root_Cat(request) 
         c = None
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if 'blog' == item.slug:
                 c = item
 
@@ -131,7 +131,7 @@ class BlogPostDetailView(DetailView):  # детализированное пре
     # Call the base implementation first to get a context
         context = super(BlogPostDetailView, self).get_context_data(**kwargs)
         name = None
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if 'blog' in item.slug:
                 context['cname'] = item.name
                 context['cdescription'] = item.description
@@ -145,7 +145,7 @@ class BlogPostDetailView(DetailView):  # детализированное пре
 
 
 def define_root_Cat(object):
-    for item in Cat.objects.all():
+    for item in Category.objects.all():
         if object.category == item.slug:
             return item.get_root()
 
@@ -162,7 +162,7 @@ class PostListView(ListView):
         # Add in a QuerySet of all the books
         #context['sidebar_title'] = define_root_Cat(request) 
 
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if cat in item.slug:
                 is_child = item.is_child_node()
                 name = item.get_root().name
@@ -191,7 +191,7 @@ class CatListView(PostListView):
 
     def get_queryset(self):
         catt = self.kwargs.get('cat', None)
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if catt in item.slug:
                 return item.get_descendants()
 
@@ -206,7 +206,7 @@ class PostDetailView(DetailView): # детализированное предс�
         #context['sidebar_title'] = define_root_Cat(request)
         this_object = NewPost.objects.get(pk=self.kwargs['pk'])
 
-        for item in Cat.objects.all():
+        for item in Category.objects.all():
             if this_object.category in item.slug:
                 is_child = item.is_child_node()
                 root = item.get_root()
