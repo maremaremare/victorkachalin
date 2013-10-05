@@ -16,6 +16,8 @@ class SinglePage(models.Model):
     class Meta:
         verbose_name = "страница"
         verbose_name_plural = "отдельные страницы" 
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -41,7 +43,7 @@ class Category(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     name = models.CharField(max_length=50,unique=True)
     slug = models.CharField(max_length=50,unique=True)
-    content_choices=(('/poetry','стихи'),('/list','записи'),('','другие категории'),('/page','отдельная страница'))
+    content_choices=(('/poems','стихи'),('/list','записи'),('cats','другие категории'),('/page','отдельная страница'))
     content = models.CharField(max_length=20,
                                 choices=content_choices,
                                 default='1') 
@@ -51,11 +53,14 @@ class Category(MPTTModel):
     def __unicode__(self):
         return self.name
     def get_absolute_url(self):
+
         return '/'+self.slug
     def save(self):
         if not self.content in self.slug:
+            if self.content == 'cats': # потому что нельзя сохранить пустое значение
+                self.content = ''
             self.slug += self.content 
-        super(Cat, self).save()  
+        super(Category, self).save()  
     class Meta:
         verbose_name = "раздел"
         verbose_name_plural = "разделы"             
@@ -73,8 +78,7 @@ class NewPost(models.Model):
                 else:
                     list.append((category, item.name))
         return list    
-    #tags = TaggableManager()
-    #category_choices=(('blog','blog'),('poetry','poetry'),('3','friends_poetry'),('4','selected'),('5','standalone'))
+
     category_choices=create_choices()
     name = models.CharField(max_length=255,unique=True)
 

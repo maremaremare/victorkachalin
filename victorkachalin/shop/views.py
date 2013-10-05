@@ -3,6 +3,8 @@ from django.views.generic import TemplateView, FormView
 from photologue.models import Photo
 from shop.models import Order, Merchandise
 from shop.forms import OrderForm
+from django.core.mail import send_mail
+
 
 
 class OrderFormView(FormView):
@@ -15,7 +17,7 @@ class OrderFormView(FormView):
         return self.request.get_full_path() + 'success/'
 
     def get_context_data(self, **kwargs):
-        id = self.kwargs.get('pk', None)
+        id = self.kwargs.get('id', None)
         item = self.kwargs.get('item', None)
         context = super(OrderFormView, self).get_context_data(**kwargs)
         for i in Merchandise.objects.all():
@@ -23,7 +25,7 @@ class OrderFormView(FormView):
                 context['item'] = i
                 # Add in a QuerySet of all the books
             #context['sidebar_title'] = define_root_Cat(request)
-        context['photo'] = Photo.objects.get(id=id)
+        context['photo'] = Photo.objects.get(title_slug=id)
         context['all_photos'] = Photo.objects.filter(is_public=True)
         context['id'] = id
         return context
@@ -35,6 +37,9 @@ class OrderFormView(FormView):
         data = form.cleaned_data
         Order.objects.create(name=data['name'], phone=data['phone'], address=data['address'], email=data['email'],
                              merchandise_id=data['merchandise_id'])
+        order_id = str(Order.objects.latest('created_at').id)
+        send_mail('Ваш заказ на сайте victorkachalin.ru', 'Ваш заказ №'+order_id, 'from@example.com',
+        [data['email']], fail_silently=False)
         #merchandise_id = data['id'], extra_field = data['extra'])
         return super(OrderFormView, self).form_valid(form)
 
@@ -44,12 +49,12 @@ class OrderView(TemplateView):
     # Call the base implementation first to get a context
 
         context = super(OrderView, self).get_context_data(**kwargs)
-        id = self.kwargs.get('pk', None)
+        id = self.kwargs.get('id', None)
         item = self.kwargs.get('item', None)
         for i in Merchandise.objects.all():
             if item == i.slug:
                 context['item'] = i
-        context['photo'] = Photo.objects.get(id=id)
+        context['photo'] = Photo.objects.get(title_slug=id)
         context['all_photos'] = Photo.objects.filter(is_public=True)
         context['id'] = id
         context['order'] = Order.objects.latest('created_at')

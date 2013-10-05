@@ -15,4 +15,4 @@ class OrderForm(ModelForm):
     #merchandise_id = forms.CharField( required=False)
     extra_field = forms.CharField(required = False)   
 
-form = OrderForm()
+form = OrderForm(initial={'delivery': 'select 1'})

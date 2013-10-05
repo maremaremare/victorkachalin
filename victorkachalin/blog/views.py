@@ -8,6 +8,15 @@ from photologue.views import GalleryView
 from tagging.models import Tag, TaggedItem
 
 
+
+from django.http import HttpResponse
+import datetime
+
+def yandex(request):
+   
+    html = "2be0f90ba111" 
+    return HttpResponse(html)
+
 class PhotoAlbumView(TemplateView):
     template_name = "photoalbum.html"
 
