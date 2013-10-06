@@ -1,11 +1,12 @@
 # coding: utf-8
-from django.db import models
-from tagging.fields import TagField
-# Create your models here.
-
-from mptt.models import MPTTModel, TreeForeignKey
-
 import re
+from django.db import models
+from django.db.models.signals import post_save
+
+from tagging.fields import TagField
+from mptt.models import MPTTModel, TreeForeignKey
+from lj.models import lj_crosspost
+from victorkachalin.settings import production
 
 
 
@@ -101,3 +102,7 @@ class NewPost(models.Model):
         verbose_name = "запись"
         verbose_name_plural = "записи"
         ordering = ['-date']    
+
+
+if production.LJ_CROSSPOST_ENABLE:
+    post_save.connect(lj_crosspost, sender=NewPost)        

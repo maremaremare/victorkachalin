@@ -175,14 +175,12 @@ class PostListView(ListView):
             if cat in item.slug:
                 is_child = item.is_child_node()
                 name = item.get_root().name
-                desc = item.get_root().get_descendants()
                 context['cslug'] = cat
                 context['cname'] = item.name
                 context['cdescription'] = item.description
                 if is_child:
                     context['dododo'] = name
-                    context['links'] = desc
-                    print desc
+                    context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
                 else:
                     context['dododo'] = 'Последние записи'
                     context['links'] = NewPost.objects.filter(category=self.kwargs['cat'])
@@ -214,15 +212,22 @@ class PostDetailView(DetailView): # детализированное предс�
         # Add in a QuerySet of all the books
         #context['sidebar_title'] = define_root_Cat(request)
         this_object = NewPost.objects.get(pk=self.kwargs['pk'])
-
+        
         for item in Category.objects.all():
             if this_object.category in item.slug:
                 is_child = item.is_child_node()
                 root = item.get_root()
-        context['cname'] = root.name
-        context['cdescription'] = root.description
-        context['dododo'] = root.name
-        context['links'] = root.get_descendants()
+                context['cname'] = item.name
+                context['cdescription'] = item.description
+                if is_child:
+                    context['dododo'] = root.name
+                    context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
+                else:
+                    context['dododo'] = 'Последние записи'
+                    context['links'] = NewPost.objects.filter(category=self.kwargs['cat'])        
+
+        # context['dododo'] = root.name
+        # context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
 
         return context
 

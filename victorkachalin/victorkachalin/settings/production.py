@@ -5,9 +5,10 @@ from os import environ
 
 from base import *
 
-from secrets import SECRET_KEY, DB_PASS, EMAIL_PASS
+from secrets import SECRET_KEY, DB_PASS, EMAIL_PASS, LJ_PASS
 
-
+LJ_USERNAME = 'moremaremore'
+LJ_CROSSPOST_ENABLE = True
 
 ########## HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
