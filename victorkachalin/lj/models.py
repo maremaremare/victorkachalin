@@ -10,17 +10,13 @@ from md5 import md5
 
 
 
-def get_tags_from_category(cat): #helper function
-    from blog.models import Category
-    for item in Category.objects.all():
-        if cat in item.slug:            
-            return item.name+','+item.get_root().name
+
 
 class LiveJournalPost(models.Model):
     post_id = models.IntegerField(editable=False)
     lj_id = models.IntegerField(editable=False)
 
-def create_args(local_post, remote_post=None):
+def create_args(blog_tags, local_post, remote_post=None):
     now = datetime.now()
     auth_challenge, auth_response = lj_challenge()
     #current_site = Site.objects.get(id=settings.SITE_ID)
@@ -28,8 +24,14 @@ def create_args(local_post, remote_post=None):
   
     # else:
     #     tags = ''
-    tag_list = get_tags_from_category(local_post.category).split(',')
-    tags = ','.join(filter(lambda x: x, tag_list)) 
+    if blog_tags:
+        tags = local_post.tags
+    else:    
+        cats = local_post.category.__unicode__()
+        tag_list = cats.split(' - ')
+
+        tags = ','.join(tag_list)
+ 
     # tags = '' 
     args = {
             'auth_method' : 'challenge',
@@ -72,13 +74,13 @@ def lj_challenge():
     auth_response = md5( auth_challenge + password_md5 ).hexdigest()
     return ( auth_challenge, auth_response )
 
-def lj_edit(local_post, remote_post):
+def lj_edit(local_post, remote_post, blog_tags):
     server = xmlrpclib.ServerProxy('http://www.livejournal.com/interface/xmlrpc')
-    response = server.LJ.XMLRPC.editevent(create_args(local_post, remote_post))
+    response = server.LJ.XMLRPC.editevent(create_args(blog_tags, local_post, remote_post))
 
-def lj_create(local_post):
+def lj_create(local_post, blog_tags):
     server = xmlrpclib.ServerProxy('http://www.livejournal.com/interface/xmlrpc')
-    response = server.LJ.XMLRPC.postevent(create_args(local_post))
+    response = server.LJ.XMLRPC.postevent(create_args(blog_tags, local_post))
 
     LiveJournalPost.objects.create(post_id=local_post.id, lj_id=response.get('itemid')).save()
 
@@ -87,8 +89,12 @@ def lj_crosspost(sender, **kwargs):
     max_non_edit = datetime.strptime( '2010-01-07 22:22:37', '%Y-%m-%d %H:%M:%S' ) #post with id 77
     #if instance.is_published and instance.date_published > max_non_edit :
     post_id = instance.pk
-    try:
-        post = LiveJournalPost.objects.get(post_id=post_id)
-        lj_edit(instance, post.lj_id)
-    except LiveJournalPost.DoesNotExist:
-        lj_create(instance)
+    blog_tags = False
+    if hasattr(sender, 'tags'):
+        blog_tags = True
+    if instance.crosspost:
+        try:
+            post = LiveJournalPost.objects.get(post_id=post_id)
+            lj_edit(instance, post.lj_id, blog_tags)
+        except LiveJournalPost.DoesNotExist:
+            lj_create(instance, blog_tags)

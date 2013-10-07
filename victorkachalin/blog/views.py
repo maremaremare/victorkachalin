@@ -12,7 +12,7 @@ from tagging.models import Tag, TaggedItem
 from django.http import HttpResponse
 import datetime
 
-def get_category_item(self, category): #helper function
+def get_category_item(category): #helper function
     for item in Category.objects.all():
         if category in item.slug:
             return item
@@ -31,13 +31,8 @@ def write_context(self, context, item):
     if is_child:
         links = item.get_root().get_descendants()[0].get_siblings(include_self=True)
     else:
-        links = NewPost.objects.filter(category=self.kwargs['cat'])
+        links = NewPost.objects.filter(category__slug=self.kwargs['cat'])
     write_context_all(context, dododo = dododo, links = links, cname = item.name, cdescription = item.description )    
-
-def yandex(request):
-   
-    html = "2be0f90ba111" 
-    return HttpResponse(html)
 
 class PhotoAlbumView(TemplateView):
     template_name = "photoalbum.html"
@@ -78,11 +73,10 @@ class PhotoAlbumTagView(PhotoAlbumView):
         return context
 
     def get_queryset(self):
-        #cat=self.kwargs['cat']
+
         tag = self.kwargs.get('tag', None)
         if tag:
             this_tag = Tag.objects.get(name=tag)
-            #string =  TaggedItem.objects.get_union_by_model(BlogPost, this_tag)
             return TaggedItem.objects.get_union_by_model(Photo, this_tag)
         else:
             return BlogPost.objects.all()
@@ -93,11 +87,8 @@ class SinglePageView(TemplateView):
     kw = None
 
     def get_context_data(self, **kwargs):
-    # Call the base implementation first to get a context
 
         context = super(SinglePageView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request) 
         context['object'] = SinglePage.objects.get(slug=self.kw)
 
         return context
@@ -109,16 +100,12 @@ class BlogPostListView(ListView):
     paginate_by = 3
 
     def get_context_data(self, **kwargs):
-    # Call the base implementation first to get a context
 
         context = super(BlogPostListView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request) 
-        category = 'blog'
-        item = get_category_item(self, category)
-
+        item = get_category_item('blog')
         write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
         cname = item.name, cdescription = item.description )
+
         return context
 
 
@@ -130,7 +117,6 @@ class BlogPostTagListView(BlogPostListView):
         tag = self.kwargs.get('tag', None)
         if tag:
             this_tag = Tag.objects.get(name=tag)
-            #string =  TaggedItem.objects.get_union_by_model(BlogPost, this_tag)
             return TaggedItem.objects.get_union_by_model(BlogPost, this_tag)
         else:
             return BlogPost.objects.all()
@@ -143,8 +129,7 @@ class BlogPostDetailView(DetailView):  # детализированное пре
     def get_context_data(self, **kwargs):
     # Call the base implementation first to get a context
         context = super(BlogPostDetailView, self).get_context_data(**kwargs)
-        category = 'blog'
-        item = get_category_item(self, category)
+        item = get_category_item('blog')
         write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
         cname = item.name, cdescription = item.description )
 
@@ -165,15 +150,15 @@ class PostListView(ListView):
         # Call the base implementation first to get a context
         category = self.kwargs.get('cat', None)
         context = super(PostListView, self).get_context_data(**kwargs)
-        item = get_category_item(self, category)
+        item = get_category_item(category)
         write_context(self, context, item)
 
         return context
 
     def get_queryset(self):
         #cat=self.kwargs['cat']
-        catt = self.kwargs.get('cat', None)
-        return NewPost.objects.filter(category=catt)
+        category = self.kwargs.get('cat', None)
+        return NewPost.objects.filter(category__slug_keyword=category)
 
 
 
@@ -182,11 +167,9 @@ class CatListView(PostListView):
     paginate_by = 4
 
     def get_queryset(self):
-        catt = self.kwargs.get('cat', None)
-        for item in Category.objects.all():
-            if catt in item.slug:
-                return item.get_descendants()
-
+        category = self.kwargs.get('cat', None)
+        item = get_category_item(category)
+        return item.get_descendants()
 
 class PostDetailView(DetailView): # детализированное представление модели
     model = NewPost
@@ -195,9 +178,7 @@ class PostDetailView(DetailView): # детализированное предс�
         
         context = super(PostDetailView, self).get_context_data(**kwargs)
         this_object = NewPost.objects.get(pk=self.kwargs['pk'])
-        category = this_object.category
-        item = get_category_item(self, category)
-        write_context(self, context, item)    
+        write_context(self, context, this_object.category)    
 
         return context
 

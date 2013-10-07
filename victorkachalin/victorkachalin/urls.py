@@ -5,7 +5,7 @@ from django.contrib import admin
 from blog.views import PhotoAlbumTagView, PhotoAlbumView,\
     SinglePageView, PostDetailView,\
     PostListView,  HomePageView, BlogPostListView,\
-    BlogPostTagListView, BlogPostDetailView, CatListView, yandex
+    BlogPostTagListView, BlogPostDetailView, CatListView
 from shop.views import OrderFormView, OrderView
 
 
@@ -14,10 +14,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     url(r'^$', HomePageView.as_view()),
-    url(r'^849ea322c236.html$', yandex),
     url(r'^home/$', HomePageView.as_view()),
     url(r'^blog/$', BlogPostListView.as_view()),
     url(r'^blog/page(?P<page>[0-9]+)/$', BlogPostListView.as_view()),
+    url(r'^blog/(?P<pk>\d+)$', BlogPostDetailView.as_view()),
     url(r'^purchase/$', SinglePageView.as_view(template_name='singlepage.html', kw='purchase')),
     url(r'^thanks/$', SinglePageView.as_view(template_name='singlepage.html', kw='thanks')),
     url(r'^fail/$', SinglePageView.as_view(template_name='singlepage.html', kw='fail')),    

@@ -100,7 +100,10 @@ $(function(){
           <ul>
             {% for post in blogposts %}
             {% if forloop.counter < 4 %}
-            <li><a href="{{post.get_absolute_url}}">{{post.text|truncatewords:9}}</a></li>
+            
+
+            <li><a href="{{post.get_absolute_url}}">{{post.text|striptags|truncatewords:9}}</a></li>
+
             {% endif %}
             {% endfor %}
           </ul>

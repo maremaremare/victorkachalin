@@ -179,6 +179,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 )
 ########## END MIDDLEWARE CONFIGURATION
 
@@ -209,7 +210,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'treeadmin',
-    'lj',
+    # 'lj',
     'tagging',
     'photologue',
     'mptt',
