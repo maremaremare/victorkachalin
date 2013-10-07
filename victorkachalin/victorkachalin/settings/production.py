@@ -35,7 +35,7 @@ EMAIL_SUBJECT_PREFIX = '[%s] ' % SITE_NAME
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'victorkachalin',
+        'NAME': 'victor',
         'USER': 'django_login',
         'PASSWORD': DB_PASS,
         'HOST': '',

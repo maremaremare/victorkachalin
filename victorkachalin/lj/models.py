@@ -7,6 +7,15 @@ import xmlrpclib
 from datetime import datetime
 from md5 import md5
 
+
+
+
+def get_tags_from_category(cat): #helper function
+    from blog.models import Category
+    for item in Category.objects.all():
+        if cat in item.slug:            
+            return item.name+','+item.get_root().name
+
 class LiveJournalPost(models.Model):
     post_id = models.IntegerField(editable=False)
     lj_id = models.IntegerField(editable=False)
@@ -16,12 +25,12 @@ def create_args(local_post, remote_post=None):
     auth_challenge, auth_response = lj_challenge()
     #current_site = Site.objects.get(id=settings.SITE_ID)
     event = local_post.text#u'%s<lj-cut>%s<br/>Оригинал можно почитать на <a href="http://%s/blog/%s/%s/">http://akademic.name</a></lj-cut>'%(local_post.excerpt.rendered, local_post.content.rendered, local_post.date_published.year, local_post.slug )
-    # if local_post.tags:
-    #     tag_list = local_post.tags.replace( ',', ' ' ).split( ' ' )
-    #     tags = ','.join(filter(lambda x: x, tag_list))
+  
     # else:
-    #     tags = ''    
-    tags = '' 
+    #     tags = ''
+    tag_list = get_tags_from_category(local_post.category).split(',')
+    tags = ','.join(filter(lambda x: x, tag_list)) 
+    # tags = '' 
     args = {
             'auth_method' : 'challenge',
             'auth_challenge' : auth_challenge,

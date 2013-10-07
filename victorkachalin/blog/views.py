@@ -12,6 +12,28 @@ from tagging.models import Tag, TaggedItem
 from django.http import HttpResponse
 import datetime
 
+def get_category_item(self, category): #helper function
+    for item in Category.objects.all():
+        if category in item.slug:
+            return item
+
+def write_context_all(context, **kwargs):
+    kw_list = ['cname', 'cdescription', 'dododo', 'links', 'taglinks', 'object']
+    for item in kw_list:
+        if item in kwargs:
+            context[item] = kwargs[item]
+
+
+def write_context(self, context, item):
+
+    is_child = item.is_child_node()
+    dododo = item.get_root().name
+    if is_child:
+        links = item.get_root().get_descendants()[0].get_siblings(include_self=True)
+    else:
+        links = NewPost.objects.filter(category=self.kwargs['cat'])
+    write_context_all(context, dododo = dododo, links = links, cname = item.name, cdescription = item.description )    
+
 def yandex(request):
    
     html = "2be0f90ba111" 
@@ -24,20 +46,14 @@ class PhotoAlbumView(TemplateView):
     # Call the base implementation first to get a context
 
         context = super(PhotoAlbumView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request)
-        c = None
-        for item in Category.objects.all():
-            if 'about' == item.slug:
-                c = item
+        
         gallery = Gallery.objects.get(title_slug='photoalbum')
-        context['object'] = gallery.photos.all()
+        gallery_object = gallery.photos.all()
         tags = Tag.objects.usage_for_model(Photo)
-        context['hastags'] = False
-        context['dododo'] = 'Категории'
-        context['taglinks'] = tags
-        context['cname'] = 'Фотоальбом'
-        context['cdescription'] = 'Мои фотографии'
+
+        write_context_all(context, object = gallery_object, dododo='Категории', taglinks = tags, \
+        cname='Фотоальбом', cdescription='Мои фотографии')
+
         return context
 
 
@@ -46,26 +62,19 @@ class PhotoAlbumTagView(PhotoAlbumView):
     # Call the base implementation first to get a context
 
         context = super(PhotoAlbumView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request)
+
         tag = self.kwargs.get('tag', None)
+
         if tag:
             this_tag = Tag.objects.get(name=tag)
-        c = None
-        for item in Category.objects.all():
-            if 'about' == item.slug:
-                c = item
-        if tag:
-            this_tag = Tag.objects.get(name=tag)
-            context['object'] = TaggedItem.objects.get_union_by_model(Photo, this_tag)
+            gallery_object = TaggedItem.objects.get_union_by_model(Photo, this_tag)
         else:
-            context['object'] = Gallery.objects.get(title_slug='photoalbum')
+            gallery_object = Gallery.objects.get(title_slug='photoalbum')
         tags = Tag.objects.usage_for_model(Photo)
-        context['hastags'] = False
-        context['dododo'] = 'Категории'
-        context['taglinks'] = tags
-        context['cname'] = 'Фотоальбом'
-        context['cdescription'] = 'Мои фотографии'
+
+        write_context_all(context, object = gallery_object, dododo='Категории', taglinks = tags, \
+        cname='Фотоальбом', cdescription='Мои фотографии')
+
         return context
 
     def get_queryset(self):
@@ -105,16 +114,11 @@ class BlogPostListView(ListView):
         context = super(BlogPostListView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         #context['sidebar_title'] = define_root_Cat(request) 
-        c = None
-        for item in Category.objects.all():
-            if 'blog' == item.slug:
-                c = item
+        category = 'blog'
+        item = get_category_item(self, category)
 
-        context['hastags'] = True
-        context['dododo'] = 'Последние записи'
-        context['links'] = BlogPost.objects.all()
-        context['cname'] = c.name
-        context['cdescription'] = c.description
+        write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
+        cname = item.name, cdescription = item.description )
         return context
 
 
@@ -139,16 +143,10 @@ class BlogPostDetailView(DetailView):  # детализированное пре
     def get_context_data(self, **kwargs):
     # Call the base implementation first to get a context
         context = super(BlogPostDetailView, self).get_context_data(**kwargs)
-        name = None
-        for item in Category.objects.all():
-            if 'blog' in item.slug:
-                context['cname'] = item.name
-                context['cdescription'] = item.description
-
-        context['hastags'] = True
-        context['dododo'] = 'Последние записи'
-        context['links'] = BlogPost.objects.all()
-        context['category'] = name
+        category = 'blog'
+        item = get_category_item(self, category)
+        write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
+        cname = item.name, cdescription = item.description )
 
         return context
 
@@ -165,25 +163,10 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        cat = self.kwargs.get('cat', None)
-
+        category = self.kwargs.get('cat', None)
         context = super(PostListView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request) 
-
-        for item in Category.objects.all():
-            if cat in item.slug:
-                is_child = item.is_child_node()
-                name = item.get_root().name
-                context['cslug'] = cat
-                context['cname'] = item.name
-                context['cdescription'] = item.description
-                if is_child:
-                    context['dododo'] = name
-                    context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
-                else:
-                    context['dododo'] = 'Последние записи'
-                    context['links'] = NewPost.objects.filter(category=self.kwargs['cat'])
+        item = get_category_item(self, category)
+        write_context(self, context, item)
 
         return context
 
@@ -191,6 +174,8 @@ class PostListView(ListView):
         #cat=self.kwargs['cat']
         catt = self.kwargs.get('cat', None)
         return NewPost.objects.filter(category=catt)
+
+
 
 
 class CatListView(PostListView):
@@ -207,27 +192,12 @@ class PostDetailView(DetailView): # детализированное предс�
     model = NewPost
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['sidebar_title'] = define_root_Cat(request)
-        this_object = NewPost.objects.get(pk=self.kwargs['pk'])
         
-        for item in Category.objects.all():
-            if this_object.category in item.slug:
-                is_child = item.is_child_node()
-                root = item.get_root()
-                context['cname'] = item.name
-                context['cdescription'] = item.description
-                if is_child:
-                    context['dododo'] = root.name
-                    context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
-                else:
-                    context['dododo'] = 'Последние записи'
-                    context['links'] = NewPost.objects.filter(category=self.kwargs['cat'])        
-
-        # context['dododo'] = root.name
-        # context['links'] = item.get_root().get_descendants()[0].get_siblings(include_self=True)
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        this_object = NewPost.objects.get(pk=self.kwargs['pk'])
+        category = this_object.category
+        item = get_category_item(self, category)
+        write_context(self, context, item)    
 
         return context
 

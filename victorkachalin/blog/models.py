@@ -29,6 +29,7 @@ class BlogPost(models.Model):
     date = models.DateField()
     tags = TagField()
     text = models.TextField()
+    category = 'blog'
     
     def __unicode__(self):
         return self.name
@@ -52,7 +53,22 @@ class Category(MPTTModel):
     slug = models.CharField(max_length=50,unique=True)
     description = models.TextField()
     def __unicode__(self):
-        return self.name
+        # if self.get_root().name != self.name:
+        #     return self.get_root().name+': '+self.name
+        # else:
+        #     return self.name 
+
+        # if self.get_parent():
+        #     return self.get_parent().name + ' - ' + __unicode__(self)
+        # else:
+        #     return self.name
+        name = ''  
+        for item in self.get_ancestors(include_self=True):
+            name+= ' - '+item.name
+        return name[2:]    
+
+        
+
     def get_absolute_url(self):
 
         return '/'+self.slug
@@ -87,11 +103,12 @@ class NewPost(models.Model):
     category = models.CharField(max_length=20,
                                 choices=category_choices,
                                 default='1')
-    def define_root_category(self):
+    # cat = models.ForeignKey(Category, null=True, limit_choices_to={'is_addable': True})
+    def define_root_category(self, item):
         for item in Category.objects.all():
             if self.category == item.slug:
                 return item.get_root().name
-    #root_category = define_root_category(self)            
+         
     text = models.TextField()
     
     def __unicode__(self):
