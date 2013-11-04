@@ -7,133 +7,82 @@
 
 
 <!-- <div id="controls"></div> -->
-<div id="loading"></div>
-<div id="slideshow" class="slideshow"></div>
+<div id="gal" class="ad-gallery">
+      <div class="ad-image-wrapper">
+      </div>
 
-
-
-<div class="navigation-container">
-
-<div id="thumbs"  class="navigation">
-<a class="pageLink prev" style="visibility: hidden; opacity: 0.67;" href="#" title="Previous Page"><img src="/static/images/nivo_arrow_l.png"></a>
-    <ul class="thumbs noscript">
-
-     {% for photo in object %}
-    
-        <li>
-            <a class="thumb" name="optionalCustomIdentifier" href="{{ photo.get_photoalbum_url }}" title="your image title">
-                <img  src="{{ photo.get_photoalbum_thumbs_url }}" alt="your image title again for graceful degradation" />
-            </a>
- 
-        </li>
-        {% endfor %}
-        
-    </ul>
-  <a class="pageLink next" style="visibility: visible; opacity: 0.67;" href="#" title="Next Page"><img src="/static/images/nivo_arrow_r.png"></a>
-</div>
-</div>
-
-
-				<!-- <div class="content">
-					<div class="slideshow-container">
-						<div id="controls" class="controls"></div>
-						<div id="loading" class="loader"></div>
-						<div id="slideshow" class="slideshow"></div>
-					</div>
-					<div id="caption" class="caption-container">
-						<div class="photo-index"></div>
-					</div>
-				</div> -->
-
-     <!-- {% for photo in object.photos.all %}
-     <div style="display: block;" class="portfolio-item"><a class="single_image" href="{{ photo.get_absolute_url }}" title="Description goes here"><img src="{{ photo.get_thumbnail_url }}" class="shadow-frame"></a></div>
-
-     {% endfor %} -->
-</div>
-
-
-        <script type="text/javascript">
-            jQuery(document).ready(function($) {
-                // We only want these styles applied when javascript is enabled
-
-                $('div.content').css('display', 'block');
-
-                // Initially set opacity on thumbs and add
-                // additional styling for hover effect on thumbs
-                var onMouseOutOpacity = 0.67;
-                $('#thumbs ul.thumbs li, div.navigation a.pageLink').opacityrollover({
-                    mouseOutOpacity:   onMouseOutOpacity,
-                    mouseOverOpacity:  1.0,
-                    fadeSpeed:         'fast',
-                    exemptionSelector: '.selected'
-                });
-                
-                // Initialize Advanced Galleriffic Gallery
-                var gallery = $('#thumbs').galleriffic({
-                    delay:                     2500,
-                    numThumbs:                 7,
-                    preloadAhead:              7,
-                    enableTopPager:            false,
-                    enableBottomPager:         false,
-                    imageContainerSel:         '#slideshow',
-                    controlsContainerSel:      '#controls',
-                    captionContainerSel:       '#caption',
-                    loadingContainerSel:       '#loading',
-                    renderSSControls:          true,
-                    renderNavControls:         true,
-                    playLinkText:              'Play Slideshow',
-                    pauseLinkText:             'Pause Slideshow',
-                    prevLinkText:              '&lsaquo; Previous Photo',
-                    nextLinkText:              'Next Photo &rsaquo;',
-                    nextPageLinkText:          'Next &rsaquo;',
-                    prevPageLinkText:          '&lsaquo; Prev',
-                    enableHistory:             false,
-                    autoStart:                 false,
-                    syncTransitions:           true,
-                    defaultTransitionDuration: 900,
-                    onSlideChange:             function(prevIndex, nextIndex) {
-                        // 'this' refers to the gallery, which is an extension of $('#thumbs')
-                        this.find('ul.thumbs').children()
-                            .eq(prevIndex).fadeTo('fast', onMouseOutOpacity).end()
-                            .eq(nextIndex).fadeTo('fast', 1.0);
-
-                        // Update the photo index display
-                        this.$captionContainer.find('div.photo-index')
-                            .html('Photo '+ (nextIndex+1) +' of '+ this.data.length);
-                    },
-                    onPageTransitionOut:       function(callback) {
-                        this.fadeTo('fast', 0.0, callback);
-                    },
-                    onPageTransitionIn:        function() {
-                        var prevPageLink = this.find('a.prev').css('visibility', 'hidden');
-                        var nextPageLink = this.find('a.next').css('visibility', 'hidden');
+      <div class="ad-nav">
+        <div class="ad-thumbs">
+          <ul class="ad-thumb-list">
                         
-                        // Show appropriate next / prev page links
-                        if (this.displayedPage > 0)
-                            prevPageLink.css('visibility', 'visible');
 
-                        var lastPage = this.getNumPages() - 1;
-                        if (this.displayedPage < lastPage)
-                            nextPageLink.css('visibility', 'visible');
+            
+     {% for photo in object %}
+<!-- <li><img data-frame="" src="{{ photo.get_photoalbum_url }}" title="" data-description=" " /> -->
+<li>
+              <a href="{{ photo.get_photoalbum_url }}">
+                <img src="{{ photo.get_photoalbum_thumbs_url }}" title="{{ photo.title }}" longdesc="{{ photo.get_display_url }}" alt="{{ photo.caption }}" class="image0">
+              </a>
+            </li>
 
-                        this.fadeTo('fast', 1.0);
-                    }
-                });
 
-                /**************** Event handlers for custom next / prev page links **********************/
+        {% endfor %}
 
-                gallery.find('a.prev').click(function(e) {
-                    gallery.previousPage();
-                    e.preventDefault();
-                });
+</ul>
+</div>
+</div>
+</div>
 
-                gallery.find('a.next').click(function(e) {
-                    gallery.nextPage();
-                    e.preventDefault();
-                });
-            });
 
-        </script>
+</div>
 
+
+
+
+<script type="text/javascript">
+  $(function() {
+    
+    var galleries = $('.ad-gallery').adGallery();
+    $('#switch-effect').change(
+      function() {
+        galleries[0].settings.effect = $(this).val();
+        return false;
+      }
+    );
+    $('#toggle-slideshow').click(
+      function() {
+        galleries[0].slideshow.toggle();
+        return false;
+      }
+    );
+    galleries[0].addAnimation('wild',
+      function(img_container, direction, desc) {
+        var current_left = parseInt(img_container.css('left'), 10);
+        var current_top = parseInt(img_container.css('top'), 10);
+        if(direction == 'left') {
+          var old_image_left = '-'+ this.image_wrapper_width +'px';
+          img_container.css('left',this.image_wrapper_width +'px');
+          var old_image_top = '-'+ this.image_wrapper_height +'px';
+          img_container.css('top', this.image_wrapper_height +'px');
+        } else {
+          var old_image_left = this.image_wrapper_width +'px';
+          img_container.css('left','-'+ this.image_wrapper_width +'px');
+          var old_image_top = this.image_wrapper_height +'px';
+          img_container.css('top', '-'+ this.image_wrapper_height +'px');
+        };
+        if(desc) {
+          desc.css('bottom', '-'+ desc[0].offsetHeight +'px');
+          desc.animate({bottom: 0}, this.settings.animation_speed * 2);
+        };
+        img_container.css('opacity', 0);
+        return {old_image: {left: old_image_left, top: old_image_top, opacity: 0},
+                new_image: {left: current_left, top: current_top, opacity: 1},
+                easing: 'easeInBounce',
+                speed: 2500};
+      }
+    );
+  });
+ 
+  </script>
 {% endblock %}
 

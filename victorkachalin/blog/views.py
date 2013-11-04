@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, FormView
 from blog.models import NewPost, Category, BlogPost, SinglePage
 
-from photologue.models import Gallery, Photo
+from photologue.models import Gallery, Photo, Photo_ph, Photo_homepage
 from photologue.views import GalleryView
 from tagging.models import Tag, TaggedItem
 
@@ -18,7 +18,7 @@ def get_category_item(category): #helper function
             return item
 
 def write_context_all(context, **kwargs):
-    kw_list = ['cname', 'cdescription', 'dododo', 'links', 'taglinks', 'object']
+    kw_list = ['cname', 'cdescription', 'dododo', 'links', 'taglinks', 'object', 'hastags']
     for item in kw_list:
         if item in kwargs:
             context[item] = kwargs[item]
@@ -42,9 +42,9 @@ class PhotoAlbumView(TemplateView):
 
         context = super(PhotoAlbumView, self).get_context_data(**kwargs)
         
-        gallery = Gallery.objects.get(title_slug='photoalbum')
-        gallery_object = gallery.photos.all()
-        tags = Tag.objects.usage_for_model(Photo)
+        gallery_object = Photo_ph.objects.all()
+
+        tags = Tag.objects.usage_for_model(Photo_ph)
 
         write_context_all(context, object = gallery_object, dododo='Категории', taglinks = tags, \
         cname='Фотоальбом', cdescription='Мои фотографии')
@@ -62,10 +62,10 @@ class PhotoAlbumTagView(PhotoAlbumView):
 
         if tag:
             this_tag = Tag.objects.get(name=tag)
-            gallery_object = TaggedItem.objects.get_union_by_model(Photo, this_tag)
+            gallery_object = TaggedItem.objects.get_union_by_model(Photo_ph, this_tag)
         else:
-            gallery_object = Gallery.objects.get(title_slug='photoalbum')
-        tags = Tag.objects.usage_for_model(Photo)
+            gallery_object = Photo_ph.objects.all()
+        tags = Tag.objects.usage_for_model(Photo_ph)
 
         write_context_all(context, object = gallery_object, dododo='Категории', taglinks = tags, \
         cname='Фотоальбом', cdescription='Мои фотографии')
@@ -77,7 +77,7 @@ class PhotoAlbumTagView(PhotoAlbumView):
         tag = self.kwargs.get('tag', None)
         if tag:
             this_tag = Tag.objects.get(name=tag)
-            return TaggedItem.objects.get_union_by_model(Photo, this_tag)
+            return TaggedItem.objects.get_union_by_model(Photo_ph, this_tag)
         else:
             return BlogPost.objects.all()
 
@@ -93,6 +93,21 @@ class SinglePageView(TemplateView):
 
         return context
 
+class SinglePageSidebarView(TemplateView):
+    template_name = "singlepage_sidebar.html"
+    kw = None
+
+    def get_context_data(self, **kwargs):
+        category = self.kwargs.get('slug', None)
+   
+        context = super(SinglePageSidebarView, self).get_context_data(**kwargs)
+        item = get_category_item(category)
+        write_context(self, context, item)
+        context['object'] = SinglePage.objects.get(slug=category)
+
+        return context
+
+
 
 class BlogPostListView(ListView):
     template_name = 'blogpost_list.html'
@@ -103,7 +118,7 @@ class BlogPostListView(ListView):
 
         context = super(BlogPostListView, self).get_context_data(**kwargs)
         item = get_category_item('blog')
-        write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
+        write_context_all(context, hastags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
         cname = item.name, cdescription = item.description )
 
         return context
@@ -130,7 +145,7 @@ class BlogPostDetailView(DetailView):  # детализированное пре
     # Call the base implementation first to get a context
         context = super(BlogPostDetailView, self).get_context_data(**kwargs)
         item = get_category_item('blog')
-        write_context_all(context, hasTags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
+        write_context_all(context, hastags = True, dododo = 'Последние записи', links = BlogPost.objects.all(), \
         cname = item.name, cdescription = item.description )
 
         return context
@@ -183,9 +198,9 @@ class PostDetailView(DetailView): # детализированное предс�
         return context
 
 
-class HomePageView(GalleryView, DetailView):
+class HomePageView(DetailView):
     template_name = 'base_homepage.html'
 
     def get_object(self):
-        gallery = get_object_or_404(Gallery, title_slug='homepage')
-        return gallery.photos.all()
+
+        return Photo_homepage.objects.all()

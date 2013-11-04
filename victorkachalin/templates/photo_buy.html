@@ -8,11 +8,7 @@
     <div id="portfolio-preview-container"><div id="portfolio-preview"><div>			
 
 <form action="" method="post" id="submit_form">{% csrf_token %}
-<!-- {{ form.non_field_errors }}
 
-
-
-{{ form.errors }} -->
     <div class="contact_form_input">
        
         <label for="id_subject"><h6>Ваше имя:</h6></label>
@@ -50,27 +46,60 @@
           {% endif %}
     </div>
 
-    <input type="hidden" name="merchandise_id" value="{{id}}" id="id_merchandise_id" />
+{% if opt %}
 
-    
+{% for list in opt %}
+
+<div class="contact_form_input" id = "extra{{ forloop.counter }}">
+
+<select>
+
+{% for option in list %}
+  <option value="{{ option }}">{{ option }}</option>
+{% endfor %}
+
+</select> 
+<br>        
+  
+   
+    </div>
+{% endfor %}
+
+
+
+{% endif %}
+ <input type="hidden" name="extra_field" value="" id="id_extra_field" />
+
+    <input type="hidden" name="merchandise_id" value="{{item.name}}" id="id_merchandise_id" />
+
+    <input type="hidden" name="photo_id" value="{{id}}" id="id_photo_id" />
 
     {% if form.errors %}
-          <div class="error_box"><b> {{form.errors.as_text}}</div>
+          <div class="error_box"><b> <ul class="errorlist">
+  {% if form.non_field_errors %}
+    <li>{{ form.non_field_errors }}</li>
+  {% endif %}
+  {% for field in form %}
+    {% if field.errors %}
+      <li>
+        {{ field.label }}:
+        <ul class="errorlist">
+          {% for error in field.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul></div>
           {% endif %}
 <br>
-     <a href="" class="button" id="send_button"><span>Заказать</span></a>
+     <a href="" class="button" id="send_button"><span>{% if edit %} Сохранить изменения {% else %} Заказать {% endif %}</span></a>
     
 </form>
 
 			</div>
-
-
-
-
 			</div>
-
-
-
 
 <div class="sidebar">
 <div class="sidebar-box">
@@ -82,29 +111,19 @@
          </div>
 </div>
  
-				
+</div>
+</div>
+<script>
 
+$( document ).ready(function() {
+var extra_field = $("select option:selected").map(function() { return this.value; })
+                                   .get().join(', ');
+                                   console.log(extra_field)
 
-<!-- <div class="sidebar-box">
-			<h4>Другие работы</h4><hr><hr>
+$('#id_extra_field').val(extra_field)
 
-			<div style="width: 1770px;" id="portfolio-wrapper">
-				
-				<div class="portfolio-items">
+});
 
-					{% for ph in all_photos %}
-
-			
-                    {% if forloop.counter < 5 %}
-                   <a href="{{ ph.get_absolute_url }}"><img style="margin-bottom: 10px; opacity: 1; cursor: pointer;" src="{{ ph.get_square_url }}" alt="" class="alignleft shadow-frame"></a>
-                    {% endif %}
-
-                     {% endfor %}
-                    </div>
-		</div>
-
-		<div id="portfolio-big-pagination"><a class="alignleft" id="prev-item"> <span class="portfolio-big-arrows">« </span>Назад</a> <a class="alignright" id="next-item"> Дальше <span class="portfolio-big-arrows"> »</span></a></div></div> --></div>
- </div>
-
+</script>
 
   {% endblock %}

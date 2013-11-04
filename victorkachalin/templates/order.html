@@ -1,0 +1,57 @@
+{% extends "photologue/root.html" %}
+
+{% load photologue_tags %}
+
+
+{% block content %}
+
+    <div id="portfolio-preview-container"><div id="portfolio-preview"><div>	
+    <h1>Заказ # {{ order.order_id }}</h1>		
+<p> <b>Имя:</b> {{order.name}}</p>
+<p> <b>Телефон:</b> {{ order.phone }}</p>
+<p> <b>Email:</b> {{ order.email }}</p>
+{% if order.address %}
+<p> <b>Доставка: </b>почтой России</p>
+<p> <b>Адрес:</b> {{ order.address }}</p>
+{% else %}
+<p> <b>Доставка: </b>при личной встрече</p>
+{% endif %}
+{% if order.extra_field %}
+<p> <b>Детали заказа:</b> {{ order.extra_field }}</p>
+{% endif %}      
+
+<p><b>Cтатус заказа:</b> {{ status|safe }}</p>
+
+			</div>
+
+
+{% if edit_button %}
+<a href="http://www.victorkachalin.ru/shop/orders/{{ order.order_id }}/edit" class="button"><span>Изменить контактные данные</span></a> 
+
+{% endif %}
+
+{% if cancel_button %}
+<a href="http://www.victorkachalin.ru/shop/orders/{{ order.order_id }}/delete" class="button"><span>Отменить заказ</span></a>  
+{% endif %}
+
+
+			</div>
+
+
+
+
+<div class="sidebar">
+<div class="sidebar-box">
+
+    <div class="pricing-box three-columns">
+          <h4><span>{{item.name}} "{{photo.title}}"</span></h4>
+          <img src="{{ photo.get_shop_url }}" alt="" class="shadow-frame">
+          <span class="price"> {{item.price}} рублей</span> <br>
+         </div>
+</div>
+ 
+</div>
+ </div>
+
+
+  {% endblock %}

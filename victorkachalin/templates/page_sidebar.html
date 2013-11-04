@@ -50,11 +50,13 @@
 
 
 {% if hastags %}
+
 {% load tagging_tags %}
 
 
 <div class="sidebar-box">
         <h4>Метки</h4>
+        <div class="double-hr"></div>
 {% tag_cloud_for_model blog.BlogPost as tags with steps=6 min_count=1 distribution=log %}
 
 {% for tag in tags %}

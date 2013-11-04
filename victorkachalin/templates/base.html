@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{% static "styles/style.css"%}"/>
 <link rel="stylesheet" type="text/css" href="{% static "styles/fonts.css"%}"/>
 
+  <link rel="stylesheet" type="text/css" href="/static/styles/jquery.ad-gallery.css">
 <!--[if lte IE 6]>
 <link href="styles/style_ie6.css" rel="stylesheet" type="text/css" />  
 <script type="text/javascript" src="script/supersleight.js"></script>
@@ -24,6 +25,7 @@
 <script type="text/javascript" src="{% static "script/jquery-1.4.js" %}"></script>
 <script type="text/javascript" src="{% static "script/jquery.tools.min.js" %}"></script>
 <script type="text/javascript" src="{% static "script/jquery.tools.min.js" %}"></script>
+<script type="text/javascript" src="/static/script/jquery.ad-gallery.js"></script>
 <script type="text/javascript" src="{% static "script/superfish.js" %}"></script>
 <script type="text/javascript" src="{% static "script/jquery.galleriffic.js" %}"></script>
 <script type="text/javascript" src="{% static "script/slider.js" %}"></script>
@@ -38,6 +40,7 @@ $(function(){
 });
 
 </script>
+
 <!-- END SCRIPTS -->
 </head>
 <body>
@@ -45,7 +48,7 @@ $(function(){
 <div id="main-container">
   <div id="line-top"></div>
   <div id="header" >
-    <div id="logo-container" class="center"><a href="index.html" ></a></div>
+    <div id="logo-container" class="center"><a href="http://www.victorkachalin.ru" ></a></div>
     <div id="menu-container">
       <div class="hr"></div>
       <div id="menu" class="center">
@@ -57,9 +60,11 @@ $(function(){
         <li>
             <a href="{{node.get_absolute_url}}">{{ node.name }}</a>
             {% if not node.is_leaf_node %}
+            {% if children %}
                 <ul class="children">
                     {{ children }}
                 </ul>
+            {% endif %}   
             {% endif %}
         </li>
     {% endrecursetree %}

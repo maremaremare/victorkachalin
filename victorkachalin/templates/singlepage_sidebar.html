@@ -1,0 +1,21 @@
+{% extends "page_sidebar.html" %}
+
+
+
+{% block content %}
+
+<div id="content">
+   
+     <div class="blog-post">
+        <h1><a href="">{{object.name}}</a></h1>
+        <div class="double-hr"></div>
+        {{object.text|safe}}
+      </div>
+
+    
+    </div>
+    
+ 
+      
+      {% endblock content %}
+ 

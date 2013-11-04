@@ -210,7 +210,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'treeadmin',
-    # 'lj',
+    'lj',
     'tagging',
     'photologue',
     'mptt',
